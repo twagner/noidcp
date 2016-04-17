@@ -19,7 +19,7 @@ const clientServiceFactory = require('./lib/clientService'),
     moment = require('moment');
 
 // TODO: file location
-let dbLocation = 'db';
+let dbLocation = path.resolve(__dirname, './noidcp.db');
 if (process.env.NODE_ENV !== 'production') {
     dbLocation = 'mem';
 }
@@ -134,7 +134,7 @@ if (process.env.NODE_ENV !== 'production') {
 // jwt keys
 const privkey = fs.readFileSync(path.resolve(__dirname, '../privkey.pem'));
 const pubkey = fs.readFileSync(path.resolve(__dirname, '../pubkey.pem'));
-const iss ='https://localhost';
+const iss ='https://noidcp-tgwagner.rhcloud.com';
 
 const config = {
     clientDb: clientDb,
@@ -143,7 +143,7 @@ const config = {
     userConsentDb: userConsentDb,
     accessTokenDb: accessTokenDb,
     refreshTokenDb: refreshTokenDb,
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://noidcp-tgwagner.rhcloud.com',
     /** Issuer Identifier */
     iss: iss,
     privkey: privkey,
