@@ -3,15 +3,9 @@
  */
 "use strict";
 
-const levelup = require('levelup'),
-    sublevel = require('level-sublevel'),
-    memdown = require('memdown'),
+const sublevel = require('level-sublevel'),
     dbPromiseAdapter = require('./dbPromise');
 
-module.exports = function(location, name) {
-    if (location === 'mem') {
-        return dbPromiseAdapter(sublevel(levelup({ db: memdown, valueEncoding: 'json' })).sublevel(name));
-    } else {
-        return dbPromiseAdapter(sublevel(levelup(location, { valueEncoding: 'json' })).sublevel(name));
-    }
+module.exports = function(db, name) {
+    return dbPromiseAdapter(sublevel(db).sublevel(name));
 };

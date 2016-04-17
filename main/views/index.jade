@@ -1,21 +1,18 @@
-extends layout
-
-block content
-  .row
-    .col-md-4
-    .col-md-4
-      form( method='get', action='/authorization/')
-        .form-group
-          label(for='clientId')
-            | Client Id *
-          input(type='text', name='client_id', value='1').form-control
-          label
-            | Redirect Uri *
-          input(type='text', name='redirect_uri').form-control
-          label
-            | Response Type *
-          input(type='text', name='response_type', value='code').form-control       
-          p
-          button(type="submit").btn.btn-primary
-            | Submit
-    .col-md-4
+doctype html
+html
+    head
+        title= title
+        link(rel='stylesheet', href='/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/bootstrap-theme.min.css')
+        link(rel='stylesheet', href='/css/noidcp.css')
+        script(src='/js/bootstrap.js')
+    body
+        .container
+            .page-header
+            h1 Node OpenID Connect Provider
+            .lead
+                p Node.js implementation of the OpenID Connect Provider Specs
+                a(href='#') kk
+        footer.footer
+            .container
+                p By Thomas Wagner

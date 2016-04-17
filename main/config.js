@@ -14,22 +14,26 @@ const clientServiceFactory = require('./lib/clientService'),
     Client = require('./lib/model/client'),
     User = require('./lib/model/user'),
     dbFactory = require('./lib/dbFactory'),
+    levelup = require('levelup'),
+    memdown = require('memdown'),
     fs = require('fs'),
     path = require('path'),
     moment = require('moment');
 
 // TODO: file location
-let dbLocation = path.resolve(__dirname, './noidcp.db');
+let db;
 if (process.env.NODE_ENV !== 'production') {
-    dbLocation = 'mem';
+    db = levelup({ db: memdown, valueEncoding: 'json' });
+} else {
+    db = levelup('./db', { valueEncoding: 'json' });
 }
 
-const clientDb = dbFactory(dbLocation, 'client');
-const userDb = dbFactory(dbLocation, 'user');
-const authorizationCodeDb = dbFactory(dbLocation, 'authorizationCode');
-const userConsentDb = dbFactory(dbLocation,'userConsent');
-const accessTokenDb = dbFactory(dbLocation, 'accessToken');
-const refreshTokenDb = dbFactory(dbLocation, 'refreshToken');
+const clientDb = dbFactory(db, 'client');
+const userDb = dbFactory(db, 'user');
+const authorizationCodeDb = dbFactory(db, 'authorizationCode');
+const userConsentDb = dbFactory(db,'userConsent');
+const accessTokenDb = dbFactory(db, 'accessToken');
+const refreshTokenDb = dbFactory(db, 'refreshToken');
 
 if (process.env.NODE_ENV !== 'production') {
     clientDb.put('111', new Client({
