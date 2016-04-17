@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  .row
+    .col-md-4
+    .col-md-4
+      form( method='get', action='/authorization/')
+        .form-group
+          label(for='clientId')
+            | Client Id *
+          input(type='text', name='client_id', value='1').form-control
+          label
+            | Redirect Uri *
+          input(type='text', name='redirect_uri').form-control
+          label
+            | Response Type *
+          input(type='text', name='response_type', value='code').form-control       
+          p
+          button(type="submit").btn.btn-primary
+            | Submit
+    .col-md-4

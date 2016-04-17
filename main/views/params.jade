@@ -1,0 +1,25 @@
+input(type="hidden", name="client_id", value='#{data.clientId}')
+input(type="hidden", name="redirect_uri", value='#{data.redirectUri}')
+input(type="hidden", name="response_type", value='#{data.responseType}')
+if data.scope
+	input(type="hidden", name="scope", value='#{data.scope}')
+if data.state
+	input(type="hidden", name="state", value='#{data.state}')
+if data.nonce
+	input(type="hidden", name="nonce", value='#{data.nonce}')
+if data.responseMode
+	input(type="hidden", name="response_mode", value='#{data.responseMode}')
+if data.display
+	input(type="hidden", name="display", value='#{data.display}')
+if data.prompt
+	input(type="hidden", name="prompt", value='#{data.prompt}')
+if data.maxAge
+	input(type="hidden", name="max_age", value='#{data.maxAge}')
+if data.uiLocales
+	input(type="hidden", name="ui_locales", value='#{data.uiLocales}')
+if data.idTokenHint
+	input(type="hidden", name="id_token_hint", value='#{data.idTokenHint}')
+if data.loginHint
+	input(type="hidden", name="login_hint", value='#{data.loginHint}')
+if data.acrValues
+	input(type="hidden", name="acr_values", value='#{data.acrValues}')

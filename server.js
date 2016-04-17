@@ -1,19 +1,31 @@
 #!/bin/env node
+"use strict";
 
-
-
-//  OpenShift sample Node application
-var express = require('express');
-const fs      = require('fs');
-
+const express = require('express'),
+    session = require('express-session'),
+    path = require('path'),
+    fs = require('fs'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    expressValidator = require('express-validator'),
+    routes = require('./main/routes/index'),
+    users = require('./main/routes/users'),
+    authorization = require('./main/routes/authorization'),
+    token = require('./main/routes/token'),
+    userInfo = require('./main/routes/userInfo'),
+    verification = require('./main/routes/verification'),
+    openIDConnect = require('./main/lib/openIDConnect'),
+    config = require('./main/config');
 
 /**
- *  Define the sample application.
+ * Adapted from OpenShift sample Node application
  */
-var SampleApp = function() {
+const NOIDProvider = function() {
 
     //  Scope.
-    var self = this;
+    const self = this;
 
 
     /*  ================================================================  */
@@ -26,14 +38,14 @@ var SampleApp = function() {
     self.setupVariables = function() {
         //  Set the environment variables we need.
         self.ipaddress = process.env.OPENSHIFT_NODEJS_IP;
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 
         if (typeof self.ipaddress === "undefined") {
             //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
             //  allows us to run/test the app locally.
             console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
             self.ipaddress = "127.0.0.1";
-        };
+        }
     };
 
 
@@ -92,36 +104,76 @@ var SampleApp = function() {
     /*  App server functions (main app logic here).                       */
     /*  ================================================================  */
 
-    /**
-     *  Create the routing table entries + handlers for the application.
-     */
-    self.createRoutes = function() {
-        self.routes = { };
-
-        self.routes['/asciimo'] = function(req, res) {
-            var link = "http://i.imgur.com/kmbjB.png";
-            res.send("<html><body><img src='" + link + "'></body></html>");
-        };
-
-        self.routes['/'] = function(req, res) {
-            res.setHeader('Content-Type', 'text/html');
-            res.send(self.cache_get('index.html') );
-        };
-    };
-
 
     /**
      *  Initialize the server (express) and create the routes and register
      *  the handlers.
      */
     self.initializeServer = function() {
-        self.createRoutes();
-        self.app = express.createServer();
 
-        //  Add handlers for the app (from the routes).
-        for (var r in self.routes) {
-            self.app.get(r, self.routes[r]);
+        const app = express();
+        // must define cookie-parser and session before routes
+        app.use(cookieParser());
+
+        // session middleware
+        const s = session({
+            secret: 'is it secret? is it safe?',
+            resave: false,
+            saveUninitialized: true
+        });
+        app.use(s);
+
+        // view engine setup
+        app.set('views', path.join(__dirname, 'main/views'));
+        app.set('view engine', 'jade');
+
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(__dirname + '/public/favicon.ico'));
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(expressValidator());
+
+        app.use(express.static(path.join(__dirname, 'main/public')));
+
+
+        app.use('/', routes);
+        app.use('/users', users);
+        app.use('/authorization', openIDConnect(config).authorizationEndpoint, authorization);
+        app.use('/token', openIDConnect(config).tokenEnpoint, token);
+        app.use('/userinfo', openIDConnect(config).bearerTokenFilter, openIDConnect(config).userInfoEndpoint, userInfo);
+
+
+        // catch 404 and forward to error handler
+        app.use(function(req, res, next) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        });
+
+        // development error handler
+        // will print stacktrace
+        if (app.get('env') === 'development') {
+            app.use(function(err, req, res, next) {
+                res.status(err.status || 500);
+                res.render('error', {
+                    message: err.message,
+                    error: err
+                });
+            });
         }
+
+        // production error handler
+        // no stacktraces leaked to user
+        app.use(function(err, req, res, next) {
+            res.status(err.status || 500);
+            res.render('error', {
+                message: err.message,
+                error: {}
+            });
+        });
+
+        self.app = app;
     };
 
 
@@ -144,7 +196,7 @@ var SampleApp = function() {
     self.start = function() {
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: Node server started on %s:%d ...',
+            console.log('%s: Node OpenID Connect Provider started on %s:%d ...',
                         Date(Date.now() ), self.ipaddress, self.port);
         });
     };
@@ -152,11 +204,13 @@ var SampleApp = function() {
 };   /*  Sample Application.  */
 
 
-
 /**
  *  main():  Main code.
  */
-var zapp = new SampleApp();
+var zapp = new NOIDProvider();
 zapp.initialize();
 zapp.start();
+
+// need this for supertest
+module.exports = zapp.app;
 
