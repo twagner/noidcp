@@ -52,7 +52,7 @@ if (process.env.NODE_ENV !== 'production') {
         clientId: 's6BhdRkqt3',
         clientSecret: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
         clientName: 's6BhdRkqt3',
-        redirectUri: 'http://localhost:9090/oauth2callback'
+        redirectUri: 'http://noidcjc-tgwagner.rhcloud.com/oauth2callback'
     }));
     userDb.put('test', new User({
         sub: 'test',

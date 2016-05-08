@@ -12,6 +12,7 @@ const express = require('express'),
     expressValidator = require('express-validator'),
     routes = require('./main/routes/index'),
     users = require('./main/routes/users'),
+    clients = require('./main/routes/clients'),
     authorization = require('./main/routes/authorization'),
     token = require('./main/routes/token'),
     userInfo = require('./main/routes/userInfo'),
@@ -139,6 +140,10 @@ const NOIDProvider = function() {
 
         app.use('/', routes);
         app.use('/users', users);
+        app.use('/api/clients', function(req, res, next) {
+            req.clientService = config.clientService;
+            return next();
+        }, clients);
         app.use('/authorization', openIDConnect(config).authorizationEndpoint, authorization);
         app.use('/token', openIDConnect(config).tokenEnpoint, token);
         app.use('/userinfo', openIDConnect(config).bearerTokenFilter, openIDConnect(config).userInfoEndpoint, userInfo);
