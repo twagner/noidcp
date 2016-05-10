@@ -86,8 +86,9 @@ const openIDConnect = function(config) {
         let clientSecret;
         if (credentials) {
             console.log('OpenIDConnect: Client authentication with basic authentication.');
+            console.log('OpenIDConnect: Client credentials: ' + JSON.stringify(credentials));
             if (!validator.isLength(credentials.name, 1) || !validator.isLength(credentials.pass, 1)) {
-
+                console.log('OpenIDConnect: Client basic authentication: invalid credentials.');
                 req.error = new TokenError('invalid_client');
                 return next();
 
