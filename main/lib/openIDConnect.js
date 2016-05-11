@@ -96,6 +96,7 @@ const openIDConnect = function(config) {
             clientId = credentials.name;
             clientSecret = credentials.pass;
         } else {
+            console.log('OpenIDConnect: Client authentication with form authentication.');
             req.check('client_id', 'Client id is missing!').notEmpty();
             req.check('client_secret', 'Client secret is missing!').notEmpty();
             if (req.validationErrors()) {
