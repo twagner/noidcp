@@ -80,6 +80,7 @@ const openIDConnect = function(config) {
         }
 
         console.log('OpenIDConnect: Client authentication');
+        console.log('OpenIDConnect: Headers: ' + req.headers);
         const credentials = auth(req);
         const data = req.body;
         let clientId;
