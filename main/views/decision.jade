@@ -1,23 +1,23 @@
 extends layout
 
 block content
-	.rows
-		.col-md-2
-		.col-md-8
-			.well
-				form(method='post', action='/authorization/decision/')
-					include ./params
-					.form-group
-						h1 Hello!
-						p.subheading Please confirm:
-						.checkbox
-							label
-							input(type='checkbox', name='granted', value='true')
-							|  Grant
+    .rows
+        .col-md-2
+        .col-md-8
+            .well
+                form(method='post', action='/authorization/decision/')
+                    include ./params
+                    .form-group
+                        h1 Decision
+                        p.subheading Please confirm access to scope(s): #{data.scope}
+                        .checkbox
+                            label
+                            input(type='checkbox', name='granted', value='true')
+                            |  Grant
 
-						hr
-						button(type="submit").btn.btn-primary
-							| Grant
-						div.clear-fix
-						hr
-		.col-md-2
+                        hr
+                        button(type="submit").btn.btn-primary
+                            | Grant
+                        div.clear-fix
+                        hr
+        .col-md-2

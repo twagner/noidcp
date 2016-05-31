@@ -413,7 +413,9 @@ AuthenticationRequest.prototype.userConsent = function() {
     const self = this;
     return Q.fcall(function() {
         if (!self.granted) {
-            throw new AuthenticationError('access_denied');
+            throw new AuthenticationError(
+                'access_denied',
+                {redirectUri: self.redirectUri, state: self.state});
         }
         return self.userConsentService.add(new UserConsent({
             sub: self.sub,

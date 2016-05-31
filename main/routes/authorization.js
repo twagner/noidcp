@@ -236,13 +236,14 @@ router.post('/login', function(req, res, next) {
 router.post('/decision', _restrict, function(req, res, next) {
     // TODO: howto prevent direct submit with granted parameter?
     return req.aq.userConsent().then(function(uc) {
-        console.log('Authorization: user consent added.')
+        console.log('Authorization: user consent added.');
         if (uc.granted) {
             return req.aq.authorize().then(function (ar) {
                 return res.redirect(302, ar.toUri());
             });
         }
     }).catch(function(error) {
+        console.log('Authorization: user consent denied.');
         return _error(error, req, res, next);
     });
 });
