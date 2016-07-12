@@ -70,8 +70,11 @@ if (process.env.NODE_ENV !== 'production') {
     }));
     userDb.put('user1', new User({
         sub: 'user1',
+        givenName: 'User',
+        familyName: '1',
         // password = test
-        password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu'
+        password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
+        email: 'dummy@mail.de'
     }));
     // adding some authorization codes:
     authorizationCodeDb.put('11100000001', new AuthorizationCode({
@@ -145,7 +148,7 @@ if (process.env.NODE_ENV !== 'production') {
 const privkey = fs.readFileSync(path.resolve(__dirname, '../privkey.pem'));
 const pubkey = fs.readFileSync(path.resolve(__dirname, '../pubkey.pem'));
 const iss ='https://noidcp-tgwagner.rhcloud.com';
-
+const userService = userServiceFactory(userDb);
 const config = {
     clientDb: clientDb,
     userDb: userDb,
@@ -159,10 +162,10 @@ const config = {
     privkey: privkey,
     pubkey: pubkey,
     clientService: clientServiceFactory(clientDb),
-    userService: userServiceFactory(userDb),
+    userService: userService,
     authorizationCodeService: authorizationCodeServiceFactory(authorizationCodeDb),
     userConsentService: userConsentServiceFactory(userConsentDb),
-    idTokenService: idTokenService(iss, privkey, pubkey),
+    idTokenService: idTokenService(iss, privkey, pubkey, userService),
     accessTokenService: accessTokenService(accessTokenDb),
     refreshTokenService: refreshTokenService(refreshTokenDb)
 

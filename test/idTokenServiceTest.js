@@ -14,7 +14,8 @@ const fs = require('fs'),
 describe('IdTokenService', function() {
     describe('#createIdToken', function() {
        it('return a jwt token', function(done) {
-           const service = idTokenService(config.iss, config.privkey, config.pubkey);
+           //const service = idTokenService(config.iss, config.privkey, config.pubkey);
+           const service = config.idTokenService;
            service.createIdToken({
                sub: 'test',
                aud: 'client',
@@ -33,6 +34,30 @@ describe('IdTokenService', function() {
                done(error);
            });
        });
+        it('return a jwt token with some extra claims', function(done) {
+            //const service = idTokenService(config.iss, config.privkey, config.pubkey);
+            const service = config.idTokenService;
+            service.createIdToken({
+                sub: 'user1',
+                aud: 'client',
+                scope: 'name email',
+                nonce: '123w342w3423423'
+            }).then(function(jwtToken) {
+
+                console.log(jwtToken);
+                _assert(function() {
+                    const decoded = jwt.verify(jwtToken, config.pubkey);
+                    decoded.should.have.property('sub', 'user1');
+                    decoded.should.have.property('aud', 'client');
+                    decoded.should.have.property('nonce', '123w342w3423423');
+                    decoded.should.have.property('name', 'User 1');
+                    decoded.should.have.property('email', 'dummy@mail.de');
+                }, done);
+
+            }, function(error) {
+                done(error);
+            });
+        });
     });
 
 });

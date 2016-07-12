@@ -7,7 +7,7 @@ const IdToken = require('./model/idToken'),
     _ = require('underscore');
 
 
-module.exports = function(iss, privkey, pubkey) {
+module.exports = function(iss, privkey, pubkey, userService) {
 
     const service = {};
 
@@ -17,11 +17,19 @@ module.exports = function(iss, privkey, pubkey) {
      * @returns {*} the jwt token
      */
     service.createIdToken = function(data) {
-        return Q.fcall(function() {
+        return userService.findBySub(data.sub).then(function(user) {
             data.iss = iss;
             const idToken = new IdToken(data);
-
+            const scope = data.scope || '';
             // TODO: include other claims from scope
+            if (scope.indexOf('name') > -1) {
+                console.log('IdTokenService: add name claim to token.');
+                idToken.name = user.name();
+            }
+            if (scope.indexOf('email') > -1) {
+                console.log('IdTokenService: add email claim to token.');
+                idToken.email = user.email;
+            }
 
             idToken.sign('RS256', privkey);
 

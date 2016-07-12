@@ -16,11 +16,16 @@ const express = require('express'),
     verification = require('./routes/verification'),
     health = require('./routes/health'),
     info = require('./routes/info'),
+    clients = require('./routes/clients'),
     openIDConnect = require('./lib/openIDConnect'),
     config = require('./config'),
     https = require('https'),
     http = require('http'),
     env = process.env;
+
+/**
+ * deprecated: use server.js!
+ */
 
 const app = express();
 
@@ -70,6 +75,7 @@ app.use('/token', openIDConnect(config).tokenEnpoint, token);
 app.use('/userinfo', openIDConnect(config).bearerTokenFilter, openIDConnect(config).userInfoEndpoint, userInfo);
 app.use('/health', health);
 app.use('/info', info);
+app.use('/clients', clients);
 //app.use('/verify', openIDConnect(config).verificationEndpoint, verification);
 
 

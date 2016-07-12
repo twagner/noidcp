@@ -47,6 +47,8 @@ function IdToken(data) {
 
 
     // TODO: other claims
+    this.name = null;
+    this.email = null;
 
     this.jwtToken = null;
 
