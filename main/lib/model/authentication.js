@@ -102,7 +102,6 @@ AuthenticationRequest.prototype.validateClient = function () {
         if (!self.redirectUri) {
             throw new AuthenticationError('invalid_redirect_uri', {});
         }
-
         return self.clientId;
 
     }).then(function (clientId) {
@@ -456,6 +455,7 @@ AuthenticationRequest.prototype._assertResponseTypeSync = function (regex) {
 
 AuthenticationRequest.prototype._assertNonceSync = function() {
     if (!this.nonce) {
+        console.log('AuthenticationRequest#_assertNonceSync: nonce is not specified but required!');
         throw new AuthenticationError(
             'invalid_request',
             {});
@@ -465,7 +465,7 @@ AuthenticationRequest.prototype._assertNonceSync = function() {
 AuthenticationRequest.prototype._idToken = function () {
     const authTime = this.authTime ? this.authTime/1000 : null;
     return this.idTokenService.createIdToken({
-        sub: this.user.sub,
+        sub: this.sub,
         authTime: authTime,
         clientId: this.clientId,
         scope: this.scope,
@@ -475,7 +475,7 @@ AuthenticationRequest.prototype._idToken = function () {
 
 AuthenticationRequest.prototype._accessToken = function() {
     return this.accessTokenService.createAccessToken({
-        sub: this.user.sub,
+        sub: this.sub,
         clientId: this.clientId,
         scope: this.scope
     });

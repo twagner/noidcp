@@ -2,16 +2,9 @@ extends layout-header-only
 
 block body
     body.body-signin
-        h1.text-center NOIDCP
-        h2.text-center Node OpenID Connect Provider
-        p.text-center
-            | In this step the Authorization Server Authenticates the End-User.
-        form(method='post', action='/authorization/login').form-signin
-            h3.form-signin-heading Please Sign In
-            if message
-                .alert.alert-warning
-                    | #{message}
-            include ./params
+        .header-signin
+            h1 Node OpenID Connect Provider
+            h2.form-signin-heading Please Sign In
             label(for="sub-tf").sr-only Username
             input(type="text", name="sub", id="sub-tf", placeholder="username").form-control
             label(for="pass-tf").sr-only Password

@@ -3,28 +3,24 @@
  */
 "use strict";
 
+
 function UserInfoRequest(dependencies) {
-    this.userService = dependencies.userService;
-    this.accessTokenService = dependencies.accessTokenService;
+    this._userService = dependencies.userService;
+    this._accessTokenService = dependencies.accessTokenService;
 }
 
-UserInfoRequest.prototype.verifyAccessToken = function(bearer) {
-    return this.accessTokenService.verify(bearer);
+UserInfoRequest.prototype.getDefaultUserInfo = function(sub) {
+    return this.getUserInfoByScope(sub, 'sub name');
 };
 
-UserInfoRequest.prototype.getDefaultUserInfo = function(sub) {
+UserInfoRequest.prototype.getUserInfoByScope = function(sub, scope) {
     return this._getUser(sub).then(function(user) {
-        const json = {
-            sub : user.sub,
-            name : user.name(),
-            email : user.email
-        };
-        return json;
+        return user.userInfoSync(scope);
     });
 };
 
 UserInfoRequest.prototype._getUser = function(sub) {
-    return this.userService.findById(sub).then(function(user) {
+    return this._userService.findById(sub).then(function(user) {
         return user;
     });
 };

@@ -134,13 +134,15 @@ if (process.env.NODE_ENV !== 'production') {
         token: 'axBtCHW1FaD0rQLROhv4',
         clientId: '111',
         expiration: moment().add(5, 'd').toDate(),
-        scope: 'openid test'
+        scope: 'openid test',
+        sub: 'user1'
     }));
     accessTokenDb.put('123456789', new AccessToken({
         sub : 'test',
         clientId : '111',
         token: '123456789',
-        expiresIn : 60*60*10
+        expiresIn : 60*60*10,
+        scope : 'sub name'
     }));
 }
 

@@ -170,6 +170,7 @@ TokenRequest.prototype.refresh = function() {
                 }
 
             }).catch(function(error) {
+                console.log('TokenRequest#refresh: ' + error);
                 throw new TokenError('invalid_request');
             });
 
@@ -214,6 +215,7 @@ TokenRequest.prototype.validateRefreshTokenRequest = function() {
     const self = this;
     return Q.fcall(function() {
         let validRequest = validator.equals(self.grantType, 'refresh_token') && validator.isLength(self.refreshToken, 1);
+        console.log('TokenRequest#validateRefreshTokenRequest: request valid ' + validRequest);
         if (!validRequest) {
             throw new TokenError('invalid_request');
         }

@@ -1,23 +1,23 @@
-extends layout
+extends layout-header-only
 
-block content
-    .rows
-        .col-md-2
-        .col-md-8
-            .well
-                form(method='post', action='/authorization/decision/')
-                    include ./params
-                    .form-group
-                        h1 End-User Consent/Authorization
-                        p.subheading Please confirm access to scope(s): #{data.scope}
-                        .checkbox
-                            label
-                            input(type='checkbox', name='granted', value='true')
-                            |  Grant
-
-                        hr
-                        button(type="submit").btn.btn-primary
-                            | Grant
-                        div.clear-fix
-                        hr
-        .col-md-2
+block body
+    body.body-signin
+        h1.text-center NOIDCP
+        h2.text-center Node OpenID Connect Provider
+        p.text-center
+            | In this step the Authorization Server obtains End-User Consent/Authorization.
+        form(method='post', action='/authorization/decision/').form-decision
+            h3.form-decision-heading End-User Consent/Authorization
+            p.subheading Client with client id
+                b  #{data.clientId}
+                |  requires access to scope(s): #{data.scope}
+            if message
+                .alert.alert-warning
+                    | #{message}
+            include ./params
+            .checkbox
+                label
+                    input(type="checkbox", name="granted", value="true", id="granted-cb")
+            hr
+            button(type="submit").btn.btn-primary
+                | Grant

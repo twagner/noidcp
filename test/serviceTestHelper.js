@@ -1,13 +1,14 @@
 /**
  * Created by twagner on 20/09/15.
  */
+"use strict";
 
 const sinon = require('sinon'),
     Q = require('q'),
     fs = require('fs'),
     path = require('path');
 
-"use strict";
+
 module.exports = function() {
 
     const o = {};

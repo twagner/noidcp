@@ -17,6 +17,7 @@ module.exports = function(iss, privkey, pubkey, userService) {
      * @returns {*} the jwt token
      */
     service.createIdToken = function(data) {
+        console.log('IdTokenService#createIdToken: create with data: ' + JSON.stringify(data));
         return userService.findBySub(data.sub).then(function(user) {
             data.iss = iss;
             const idToken = new IdToken(data);

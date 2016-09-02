@@ -27,30 +27,30 @@ describe("AuthorizationCode", function() {
         });
     });
 
-    describe("#isValid", function() {
-        it("should check if the authorizatio code is valid.", function() {
+    describe("#isValidSync", function() {
+        it("should check if the authorization code is valid.", function() {
             const ac = new AuthorizationCode();
             ac.generate();
-            ac.isValid().should.eql(true);
+            ac.isValidSync().should.eql(true);
         });
     });
 
-    describe("#isValid with expired code", function() {
+    describe("#isValidSync with expired code", function() {
         it("should return false.", function() {
             const ac = new AuthorizationCode();
             ac.generate();
             ac.expiration = moment().add(-5, 'm').toDate();
-            ac.isValid().should.eql(false);
+            ac.isValidSync().should.eql(false);
         });
     });  
 
-    describe("#isOpenID", function() {
+    describe("#isOpenIDSync", function() {
         it("should return true if the scope is 'openid'.", function() {
             const ac = new AuthorizationCode({
                 scope: 'openid'
             });
             ac.generate();
-            ac.isOpenID().should.eql(true);
+            ac.isOpenIDSync().should.eql(true);
         });
     });
 
@@ -58,7 +58,7 @@ describe("AuthorizationCode", function() {
         it("should return false'.", function() {
             const ac = new AuthorizationCode();
             ac.generate();
-            ac.isOpenID().should.eql(false);
+            ac.isOpenIDSync().should.eql(false);
         });
     });            
 

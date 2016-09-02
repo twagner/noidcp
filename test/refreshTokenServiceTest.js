@@ -55,7 +55,7 @@ describe('RefreshTokenService', function() {
             }, function(error) {
                 done(error);
             });
-        })
+        });
     });
 
     describe('#findByRefreshToken', function() {

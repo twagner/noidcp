@@ -66,7 +66,7 @@ describe('Access Token Service', function () {
                     error.should.be.ok();
                 }, done);
             });
-        })
+        });
     });
 
     describe('#generateTokenSync', function () {
@@ -74,11 +74,11 @@ describe('Access Token Service', function () {
             const token = service.generateTokenSync();
             token.should.be.type('string');
             token.should.have.lengthOf(20);
-        })
+        });
     });
 
     describe('#verify', function() {
-        it('verifies the access token', function() {
+        it('verifies the access token', function(done) {
             const data = {
                 sub: 'sub',
                 clientId: 'client',

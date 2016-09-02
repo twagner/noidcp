@@ -3,7 +3,8 @@
 const should = require('should'),
     IdToken = require('../../main/lib/model/idToken'),
     codeGenerator = require('../../main/lib/util/codeGenerator'),
-    jwt = require('jsonwebtoken');
+    jwt = require('jsonwebtoken'),
+    config = require('../../main/config');
 
 describe("IdToken", function() {
 
@@ -63,54 +64,87 @@ describe("IdToken", function() {
 
         it("should contain all required claims", function() {
             const idToken = new IdToken({
+                iss: 'test',
                 sub: 'the subject',
                 aud: 'client id'
             });
             const secret = codeGenerator.generate(32);
-            const token = idToken.signSymetric('HS256', secret);
-            const verified = jwt.verify(token, secret);
+            idToken.signSymetric('HS256', secret);
+
+            const verified = jwt.verify(idToken.jwtToken, secret);
             verified.should.have.property('iss');
             verified.should.have.property('sub');
             verified.should.have.property('aud');
             verified.should.have.property('exp');
             verified.should.have.property('iat');
-
         });
 
         it("should also contain nonce if specified", function() {
             const idToken = new IdToken({
+                iss: 'test',
+                sub: 'the subject',
+                aud: 'client id',
                 nonce: 'dsfas'
             });
             const secret = codeGenerator.generate(32);
-            const token = idToken.signSymetric('HS256', secret);
-            const verified = jwt.verify(token, secret);
+            idToken.signSymetric('HS256', secret);
+            const verified = jwt.verify(idToken.jwtToken, secret);
             verified.should.have.property('nonce');
         });
 
         it("should also contain authTime if specified", function() {
             const idToken = new IdToken({
+                iss: 'test',
+                sub: 'the subject',
+                aud: 'client id',
                 authTime: 123
             });
             const secret = codeGenerator.generate(32);
-            const token = idToken.signSymetric('HS256', secret);
-            const verified = jwt.verify(token, secret);
+            idToken.signSymetric('HS256', secret);
+            const verified = jwt.verify(idToken.jwtToken, secret);
             verified.should.have.property('auth_time');
         });
 
-
-    });
-
-    describe("#_payload", function () {
         it("should contain additional claims", function() {
             const idToken = new IdToken({
-                authTime: 123,
-                nickname: 'maus',
-                givenName: 'Klaus'
+                iss: 'test',
+                sub: 'the subject',
+                aud: 'client id',
+                name: 'maus',
+                email: 'maus@home.xy'
             });
-            const token = idToken._payload();
-            token.should.have.property('auth_time');
-            token.should.have.property('nickname');
-            token.should.have.property('given_name');
+            const secret = codeGenerator.generate(32);
+            idToken.signSymetric('HS256', secret);
+            const verified = jwt.verify(idToken.jwtToken, secret);
+
+            verified.should.have.property('name');
+            verified.should.have.property('email');
         });
     });
+
+    describe("#sign", function() {
+        it("should contain all required and additional claims", function() {
+            const nonce = codeGenerator.generate(32);
+            const idToken = new IdToken({
+                iss: config.iss,
+                sub: 'the subject',
+                aud: 'client id',
+                name: 'maus',
+                email: 'maus@home.xy',
+                nonce: nonce
+            });
+            idToken.sign('RS256', config.privkey);
+            const verified = jwt.verify(idToken.jwtToken, config.pubkey);
+            verified.should.have.property('iss', config.iss);
+            verified.should.have.property('sub');
+            verified.should.have.property('aud');
+            verified.should.have.property('exp');
+            verified.should.have.property('iat');
+            verified.should.have.property('nonce', nonce);
+            verified.should.have.property('name', 'maus');
+            verified.should.have.property('email', 'maus@home.xy');
+        });
+    });
+
+
 });

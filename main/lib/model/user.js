@@ -2,7 +2,8 @@
 
 const Model = require('./model'),
     Q = require('q'),
-    bcrypt = require('bcryptjs');
+    bcrypt = require('bcryptjs'),
+    _ = require('underscore');
 
 function User(data) {
     Model.call(this);
@@ -30,8 +31,31 @@ function User(data) {
     this.updatedAt = null;
 
     this.password = null;
-    
-    this.init(data);   
+
+    this.init(data);
+
+    this._userInfo = {
+        sub: this.sub,
+        name : this.name(),
+        given_name: this.givenName,
+        family_name: this.familyName,
+        middle_name: this.middleName,
+        nickname: this.nickname,
+        preferred_username: this.preferredUsername,
+        profile: this.profile,
+        picture: this.picture,
+        website: this.website,
+        email: this.email,
+        email_verified: this.emailVerified,
+        gender: this.gender,
+        birthdate: this.birthdate,
+        zoneinfo: this.zoneinfo,
+        locale: this.locale,
+        phone_number: this.phoneNumber,
+        phone_number_verified: this.phoneNumberVerified,
+        address: this.address,
+        updated_at: this.updatedAt
+    };
 }
 
 User.prototype = new Model();
@@ -57,28 +81,27 @@ User.prototype.name = function () {
 };
 
 User.prototype.toJson = function() {
-    const o = {
-        sub: this.sub,
-        given_name: this.givenName,
-        family_name: this.familyName,
-        middle_name: this.middleName,
-        nickname: this.nickname,
-        preferred_username: this.preferredUsername,
-        profile: this.profile,
-        picture: this.picture,
-        website: this.website,
-        email: this.email,
-        email_verified: this.emailVerified,
-        gender: this.gender,
-        birthdate: this.birthdate,
-        zoneinfo: this.zoneinfo,
-        locale: this.locale,
-        phone_number: this.phoneNumber,
-        phone_number_verified: this.phoneNumberVerified,
-        address: this.address,
-        updated_at: this.updatedAt
-    };
-    return JSON.stringify(o);
+    return JSON.stringify(this._userInfo);
+};
+
+/**
+ * Returns userInfo by scope.
+ * @param scope
+ * @returns {{}}
+ */
+User.prototype.userInfoSync = function(scope) {
+
+    // default claims returned by this method.
+    let claims = ['sub', 'name'];
+    if (scope) {
+        claims = scope.split(" ");
+    }
+    const payload = {};
+    const self = this;
+    _.each(claims, function(key, index, list) {
+        payload[key] = self._userInfo[key];
+    });
+    return payload;
 };
 
 User.prototype.hash = function(plaintext) {

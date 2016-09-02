@@ -111,8 +111,9 @@ const openIDConnect = function(config) {
 
         }
         req.check('grant_type', 'Invalid grant_type').notEmpty();
-        req.check('code', 'Invalid code').notEmpty().isAlphanumeric();
-        req.check('redirect_uri', 'Invalid redirect_uri').notEmpty();
+        //req.check('code', 'Invalid code').notEmpty().isAlphanumeric();
+        // not required for grant type refresh_token
+        //req.check('redirect_uri', 'Invalid redirect_uri').notEmpty();
 
         if (req.validationErrors()) {
             req.error = new TokenError('invalid_request');
@@ -135,8 +136,22 @@ const openIDConnect = function(config) {
 
     o.bearerTokenFilter = function(req, res, next) {
 
-        const bearer = req.get('Bearer');
+
+        // access token in Authorization Header or as form-encoded Boy Parameter or as URI Query Parameter
+        let bearer;
+        if (req.get('Authorization') && /Bearer/.test(req.get('Authorization'))) {
+            console.log('OpenIDConnect: Bearer Token in Authorization Header');
+            bearer = req.get('Authorization').substring(7);
+        } else if (req.body.access_token) {
+            console.log('OpendIDConnect: Bearer token as form-encoded body parameter');
+            bearer = req.body.access_token;
+        } else if (req.query.access_token) {
+            console.log('OpenIDConnect: Bearer token as URI query parameter.');
+            bearer = req.query.access_token;
+        }
+
         console.log('OpenIDConnect: check bearer token ' + bearer);
+
         if (!bearer) {
             res.set('WWW-Authenticate', 'error="invalid_request"');
             res.status(400).end();

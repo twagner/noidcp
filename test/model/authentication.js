@@ -13,7 +13,7 @@ const should = require('should'),
 
 describe('AuthenticationRequest', function() {
     const check = function(req) {
-        const aq = new AuthenticationRequest(data, deps);
+        const aq = new AuthenticationRequest({}, {});
         aq.clientId.should.eql('client');
         aq.redirectUri.should.eql('https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb');
         aq.scope.should.eql('openid');
@@ -35,7 +35,7 @@ describe('AuthenticationRequest', function() {
             var req = {
             };
             try {
-                const aq = new AuthenticationRequest(req, deps);
+                const aq = new AuthenticationRequest(req, {});
             } catch (error) {
                 (error !== null).should.eql(true);
             }
@@ -102,7 +102,7 @@ describe('AuthenticationRequest', function() {
                 _assert(function() {
                     error.should.be.instanceof(AuthenticationError);
                     error.error.should.equal('client_not_found');
-                }, done)
+                }, done);
             });
         }); 
         it('should throw an error if there is a redirect_uri mismatch.', function(done) {
@@ -243,12 +243,15 @@ describe('AuthenticationRequest', function() {
     
     describe('#authorizeWithCodeGrant', function() {
         it('should return an authorization code.', function(done) {
+            const user = {
+                sub: 'user1'
+            };
             const req = {
                 client_id: '111',
                 response_type: 'code',
                 redirect_uri: 'http%3A%2F%2Flocalhost%2Fclient',
                 granted: 'true',
-                user: 'user1',
+                user: user,
                 state: 'a state',
                 scope: 'test'
             };
@@ -281,12 +284,15 @@ describe('AuthenticationRequest', function() {
             });
         });
         it('should throw an unsupported response type error.', function(done) {
+            const user = {
+                sub: 'user1'
+            };
             const aq = new AuthenticationRequest({
                 client_id: '111',
                 response_type: 'xyz',
                 redirect_uri: 'http%3A%2F%2Flocalhost%2Fclient',
                 granted: 'true',
-                user: 'user1',
+                user: user,
                 scope: 'test'
             }, config);
             aq.authorizeWithCodeGrant().then(null, function(error) {
@@ -321,7 +327,7 @@ describe('AuthenticationRequest', function() {
 
             aq.shouldPromptForConsent().then(function(prompt) {
                 _assert(function() {
-                    prompt.should.be.false;
+                    prompt.should.eql(false);
                 }, done);
             }, function(error) {
                 done(error);
@@ -335,11 +341,11 @@ describe('AuthenticationRequest', function() {
             }, config);
             aq.shouldPromptForConsent().then(function(prompt) {
                 _assert(function() {
-                    prompt.should.be.true;
+                    prompt.should.eql(true);
                 }, done);
             }, function(error) {
                 done(error);
-            })
+            });
         });
         it('should throw AuthenticationError because user consent doesn\'t exist and prompt == none', function(done) {
             const aq = new AuthenticationRequest({
@@ -378,7 +384,7 @@ describe('AuthenticationRequest', function() {
             };
 
             const ac = new AuthenticationRequest(data, config);
-            ac.shouldPromptForLoginSync().should.be.true;
+            ac.shouldPromptForLoginSync().should.eql(true);
         });
 
         it('should return true if user is not authenticated', function() {
@@ -386,7 +392,7 @@ describe('AuthenticationRequest', function() {
             };
 
             const ac = new AuthenticationRequest(data, config);
-            ac.shouldPromptForLoginSync().should.be.true;
+            ac.shouldPromptForLoginSync().should.eql(true);
         });
 
         it('should return false if user is already authenticated and prompt is not none', function() {
@@ -394,7 +400,7 @@ describe('AuthenticationRequest', function() {
                 user: new User({})
             };
             const ac = new AuthenticationRequest(data, config);
-            ac.shouldPromptForLoginSync().should.be.false;
+            ac.shouldPromptForLoginSync().should.eql(false);
         });
 
         it('should throw an AuthenticationError if user is not authenticated and prompt set to none', function() {
@@ -402,7 +408,7 @@ describe('AuthenticationRequest', function() {
                 prompt: 'none'
             };
             const ac = new AuthenticationRequest(data, config);
-            (function(){ ac.shouldPromptForLoginSync() }).should.throw('Login required');
+            (function(){ ac.shouldPromptForLoginSync(); }).should.throw('Login required');
 
         });
     });
@@ -411,13 +417,13 @@ describe('AuthenticationRequest', function() {
         let aq;
         beforeEach(function() {
             const user = {
-                sub: 'a user'
+                sub: 'user1'
             };
             const req = {
                 client_id: '111',
                 response_type: 'id_token',
                 redirect_uri: 'http%3A%2F%2Flocalhost%2Fclient',
-                granted: true,
+                granted: 'true',
                 user: user,
                 state: 'a state',
                 scope: 'openid',
@@ -434,6 +440,7 @@ describe('AuthenticationRequest', function() {
                 done();
             }, function(error) {
                 console.log('Test failed with error: ' + error);
+                done(error);
             });
         });
         it('should return an id and access token.', function(done) {
@@ -448,7 +455,7 @@ describe('AuthenticationRequest', function() {
                 done();
             }, function(error) {
                 console.log('Test failed with error: ' + error);
-                done();
+                done(error);
             });
         });
         it('should return an access token.', function(done) {
@@ -462,7 +469,7 @@ describe('AuthenticationRequest', function() {
                 done();
             }, function(error) {
                 console.log('Test failed with error: ' + error);
-                done();
+                done(error);
             });
         });
     });

@@ -54,12 +54,14 @@ const NOIDProvider = function() {
      *  Populate the cache.
      */
     self.populateCache = function() {
+        /*
         if (typeof self.zcache === "undefined") {
             self.zcache = { 'index.html': '' };
         }
 
         //  Local cache for static content.
         self.zcache['index.html'] = fs.readFileSync('./index.html');
+        */
     };
 
 
@@ -137,6 +139,13 @@ const NOIDProvider = function() {
 
         app.use(express.static(path.join(__dirname, 'main/public')));
 
+        // CORS
+        app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+
         app.use('/', routes);
         app.use('/users', users);
         app.use('/api/clients', function(req, res, next) {
@@ -146,6 +155,8 @@ const NOIDProvider = function() {
         app.use('/authorization', openIDConnect(config).authorizationEndpoint, authorization);
         app.use('/token', openIDConnect(config).tokenEnpoint, token);
         app.use('/userinfo', openIDConnect(config).bearerTokenFilter, openIDConnect(config).userInfoEndpoint, userInfo);
+
+
 
 
         // catch 404 and forward to error handler

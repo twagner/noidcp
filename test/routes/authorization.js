@@ -46,7 +46,7 @@ describe('Authorization code grant', function() {
                     _assert(function () {
                         should(res.text.indexOf('Invalid request') > -1).be.ok();
                     }, done);
-                })
+                });
         });
     });
 
@@ -105,8 +105,8 @@ describe('Authorization code grant', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('code=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('scope=openid%20test') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('code=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('scope=openid%20test') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -132,10 +132,9 @@ describe('Authorization code grant', function() {
 
                     if (err) return done(err);
 
-                    console.log(res.header['location']);
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('error=access_denied') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('error=access_denied') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -154,7 +153,7 @@ describe('Authorization code grant', function() {
                     if (err) return done(err);
 
                     _assert(function () {
-                        (res.header['location'].indexOf('error=consent_required') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('error=consent_required') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -173,7 +172,7 @@ describe('Authorization code grant', function() {
                     if (err) return done(err);
 
                     _assert(function () {
-                        (res.header['location'].indexOf('error=unsupported_response_type') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('error=unsupported_response_type') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -196,7 +195,7 @@ describe('Authorization code grant', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('error=login_required') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('error=login_required') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -235,8 +234,8 @@ describe('Authorization code grant', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('code=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('scope=openid%20test') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('code=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('scope=openid%20test') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -255,8 +254,8 @@ describe('Authorization code grant', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('code=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('scope=openid%20test') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('code=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('scope=openid%20test') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -309,9 +308,9 @@ describe('Authentication using the Implicit Flow', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('token_type=bearer') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('id_token=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('scope=openid%20test') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('token_type=bearer') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('id_token=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('scope=openid%20test') > -1).should.be.eql(true);
                     }, done);
                 });
         });
@@ -329,10 +328,10 @@ describe('Authentication using the Implicit Flow', function() {
 
                     _assert(function () {
                         (res.status).should.be.eql(302);
-                        (res.header['location'].indexOf('access_token=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('token_type=bearer') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('id_token=') > -1).should.be.eql(true);
-                        (res.header['location'].indexOf('scope=openid%20test') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('access_token=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('token_type=bearer') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('id_token=') > -1).should.be.eql(true);
+                        (res.header.location.indexOf('scope=openid%20test') > -1).should.be.eql(true);
                     }, done);
                 });
         });

@@ -75,7 +75,8 @@ function _error(error, req, res, next) {
         if (errorCode=== 'invalid_user_credentials' || errorCode === 'user_not_found') {
             return res.render('login', {
                 // TODO: include as jwt to prevent disclosure
-                data: req.aq
+                data: req.aq,
+                message: 'Invalid user credentials. Try test / test'
             });
         } else if (error.httpStatus === 302) {
             // redirect to client with error

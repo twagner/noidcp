@@ -2,6 +2,14 @@ module.exports = function(grunt) {
   
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        /*
+        copy: {
+            files: {
+                src: '/home/twagner/Documents/bootstrap-3.3.7/dist/js/*.js',
+                dest: '/tmp'
+            }
+        },
+        */
         jshint: {
             options: {
                 esnext: true,
@@ -20,7 +28,7 @@ module.exports = function(grunt) {
                     reporter: 'spec',
                     harmony: true,
                     quiet: false,
-                    files: ['test/*.js','test/model/user.js','test/model/authentication.js']
+                    files: ['test/*.js','test/model/*.js']
                 }
             },
             it: {
@@ -37,10 +45,13 @@ module.exports = function(grunt) {
     });
     grunt.loadNpmTasks('grunt-mocha-cli');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+
     
-    grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('default', ['jshint', 'mochacli']);
+    //grunt.registerTask('jshint', ['jshint']);
     grunt.registerTask('test', ['mochacli']);
     grunt.registerTask('it', ['mochacli:it']);
+    //grunt.registerTask('bootstrap', ['copy']);
 
 
 };

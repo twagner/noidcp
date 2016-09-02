@@ -181,4 +181,25 @@ describe('Token endpoint', function() {
                 });
         });
     });
+
+    describe('When the grant type is refresh_token', function() {
+        it('The token endpoint should ', function(done) {
+            request(app).post('/token')
+                .send({
+                    grant_type: 'refresh_token',
+                    refresh_token: 'WX0X7Kew7f7z7UvGmgQC'
+                }).auth('111', 'test')
+                .end(function(e, res) {
+                    if (e) {
+                        return done(e);
+                    }
+                    _assert(function() {
+                        res.status.should.eql(200);
+                        const o = JSON.parse(res.text);
+                        console.log(o);
+
+                    }, done);
+                });
+        });
+    });
 });
