@@ -76,6 +76,13 @@ if (process.env.NODE_ENV !== 'production') {
         password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
         email: 'dummy@mail.de'
     }));
+    userDb.put('Birgit.Feldmann@fernuni-hagen.de', new User({
+        sub: 'Birgit.Feldmann@fernuni-hagen.de',
+        givenName: 'Birgit',
+        familyName: 'Feldmann',
+        password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
+        email: 'Birgit.Feldmann@fernuni-hagen.de'
+    }));
     // adding some authorization codes:
     authorizationCodeDb.put('11100000001', new AuthorizationCode({
         code: '11100000001',
