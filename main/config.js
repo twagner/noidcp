@@ -52,7 +52,7 @@ if (process.env.NODE_ENV !== 'production') {
         clientId: 's6BhdRkqt3',
         clientSecret: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
         clientName: 's6BhdRkqt3',
-        redirectUri: 'http://noidcjc-tgwagner.rhcloud.com/oauth2callback'
+        redirectUri: 'https://noidcjc-tgwagner.rhcloud.com/oauth2callback'
     }));
     clientDb.put('local', new Client({
         clientId: 'local',
