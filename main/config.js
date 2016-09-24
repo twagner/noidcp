@@ -25,7 +25,8 @@ let db;
 if (process.env.NODE_ENV !== 'production') {
     db = levelup({ db: memdown, valueEncoding: 'json' });
 } else {
-    db = levelup('./db', { valueEncoding: 'json' });
+    const dbDir = process.env.OPENSHIFT_DATA_DIR || '/var/tmp';
+    db = levelup(dbDir + '/db', { valueEncoding: 'json' });
 }
 
 const clientDb = dbFactory(db, 'client');
