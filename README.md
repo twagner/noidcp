@@ -23,11 +23,15 @@ For client and user administration the application provides two REST
 services:
 
 GET     /api/clients            list all clients
+
 POST    /api/clients            creates a new client 
+
 DELETE  /api/clients/:clientId  deletes a client
 
 GET     /api/users              lists all users
+
 POST    /api/users              creates a new user
+
 DELETE  /api/users/:userId      deletes a user 
 
 These services are accessible only by the "root" user.
