@@ -18,6 +18,7 @@ const express = require('express'),
     userInfo = require('./main/routes/userInfo'),
     verification = require('./main/routes/verification'),
     openIDConnect = require('./main/lib/openIDConnect'),
+    securityFilter = require('./main/lib/securityFilter'),
     config = require('./main/config');
 
 /**
@@ -114,6 +115,12 @@ const NOIDProvider = function() {
      */
     self.initializeServer = function() {
 
+        const rootFilterConfig = {
+            userService : config.userService,
+            authorizedUser : 'root'
+        };
+
+
         const app = express();
         // must define cookie-parser and session before routes
         app.use(cookieParser());
@@ -147,8 +154,12 @@ const NOIDProvider = function() {
         });
 
         app.use('/', routes);
-        app.use('/users', users);
-        app.use('/api/clients', function(req, res, next) {
+
+        app.use('/api/users', securityFilter(rootFilterConfig), function(req, res, next) {
+            req.userService = config.userService;
+            return next();
+        }, users);
+        app.use('/api/clients', securityFilter(rootFilterConfig), function(req, res, next) {
             req.clientService = config.clientService;
             return next();
         }, clients);

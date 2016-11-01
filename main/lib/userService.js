@@ -18,6 +18,8 @@ module.exports = function(userDb) {
         return this.findById(sub);
     };
 
+    service.createReadStream  = userDb.createReadStream;
+
     return service;
 
 };

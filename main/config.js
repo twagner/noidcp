@@ -18,15 +18,27 @@ const clientServiceFactory = require('./lib/clientService'),
     memdown = require('memdown'),
     fs = require('fs'),
     path = require('path'),
-    moment = require('moment');
+    moment = require('moment'),
+    env = process.env.NODE_ENV || 'development',
+    settings = require('../settings.' + env);
+
+console.log("Settings: " + JSON.stringify(settings));
 
 // TODO: file location
 let db;
+/*
 if (process.env.NODE_ENV !== 'production') {
     db = levelup({ db: memdown, valueEncoding: 'json' });
 } else {
     const dbDir = process.env.OPENSHIFT_DATA_DIR || '/var/tmp';
     db = levelup(dbDir + '/db', { valueEncoding: 'json' });
+}
+*/
+
+if (settings.dbDir === 'mem') {
+    db = levelup({ db: memdown, valueEncoding: 'json' });
+} else {
+    db = levelup(settings.dbDir + '/db', { valueEncoding: 'json' });
 }
 
 const clientDb = dbFactory(db, 'client');
@@ -65,7 +77,6 @@ if (process.env.NODE_ENV !== 'production') {
         sub: 'test',
         givenName: 'Thomas',
         familyName: 'Wagner',
-        // password = test
         password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
         email: 'test@mail.de'
     }));
@@ -73,7 +84,6 @@ if (process.env.NODE_ENV !== 'production') {
         sub: 'user1',
         givenName: 'User',
         familyName: '1',
-        // password = test
         password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
         email: 'dummy@mail.de'
     }));
@@ -154,10 +164,17 @@ if (process.env.NODE_ENV !== 'production') {
     }));
 }
 
+// system user for administration
+userDb.put('root', new User({
+    sub: 'root',
+    password: '$2a$10$DH8B5ZMp/gYV0FPNmpdj6e9LivlBBjUgVIacxstN/Ob/s8oYaL7xu',
+    email: 'root@localhost'
+}));
+
 // jwt keys
 const privkey = fs.readFileSync(path.resolve(__dirname, '../privkey.pem'));
 const pubkey = fs.readFileSync(path.resolve(__dirname, '../pubkey.pem'));
-const iss ='https://noidcp-tgwagner.rhcloud.com';
+const iss = settings.iss; //'https://noidcp-tgwagner.rhcloud.com';
 const userService = userServiceFactory(userDb);
 const config = {
     clientDb: clientDb,
@@ -166,7 +183,7 @@ const config = {
     userConsentDb: userConsentDb,
     accessTokenDb: accessTokenDb,
     refreshTokenDb: refreshTokenDb,
-    baseUrl: 'https://noidcp-tgwagner.rhcloud.com',
+    baseUrl: settings.baseUrl, //'https://noidcp-tgwagner.rhcloud.com',
     /** Issuer Identifier */
     iss: iss,
     privkey: privkey,
