@@ -1,6 +1,6 @@
 {
   "name": "noc",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Nodejs OpenId Connect Provider (noidcp)",
   "author": {
     "name": "Thomas Wagner",
