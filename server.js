@@ -13,6 +13,7 @@ const express = require('express'),
     routes = require('./main/routes/index'),
     users = require('./main/routes/users'),
     clients = require('./main/routes/clients'),
+    userConsent = require('./main/routes/userConsent'),
     authorization = require('./main/routes/authorization'),
     token = require('./main/routes/token'),
     userInfo = require('./main/routes/userInfo'),
@@ -163,6 +164,11 @@ const NOIDProvider = function() {
             req.clientService = config.clientService;
             return next();
         }, clients);
+        app.use('/api/userconsent', securityFilter(rootFilterConfig), function(req, res, next) {
+            req.userConsentService = config.userConsentService;
+            return next();
+        }, userConsent);
+
         app.use('/authorization', openIDConnect(config).authorizationEndpoint, authorization);
         app.use('/token', openIDConnect(config).tokenEnpoint, token);
         app.use('/userinfo', openIDConnect(config).bearerTokenFilter, openIDConnect(config).userInfoEndpoint, userInfo);

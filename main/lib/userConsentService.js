@@ -43,5 +43,8 @@ module.exports = function(db) {
         });
         return this.findById(uc.generateId());
     };
+
+    service.createReadStream  = db.createReadStream;
+
     return service;
 };
