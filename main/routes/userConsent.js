@@ -44,19 +44,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.delete('/', function(req, res, next) {
-    const user = new UserConsent({
-        userId : req.body.userId,
-        clientId : req.body.clientId,
-        scope : scope
+    req.userConsentService.findBySubAndClientIdAndScope(req.body.sub, req.body.clientId, req.body.scope).then(function(userConsent) {
+        req.userConsentService.remove(userConsent).then(function() {
+            console.log("Removed");
+            res.end();
+        }).fail(function(error) {
+            console.log("fail");
+            res.status(500).end();
+        });
     });
-    req.userConsentService.remove(user).then(function() {
-        console.log("Removed");
-        res.end();
-    }).fail(function(error) {
-        console.log("fail");
-        res.status(500).end();
-    });
-
 });
 
 module.exports = router;
